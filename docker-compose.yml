@@ -1,3 +1,11 @@
+# version: '3'
+# services:
+#   deepfake_api:
+#     build: .
+#     container_name: 'deepfake_detector'
+#     ports:
+#       - '8000:8000'
+
 version: '3'
 services:
   deepfake_api:
@@ -5,3 +13,4 @@ services:
     container_name: 'deepfake_detector'
     ports:
       - '8000:8000'
+    command: uvicorn app:app --host 0.0.0.0 --port 8000  # Start command added here
