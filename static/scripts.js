@@ -67,7 +67,8 @@ function classifyImage(event) {
     formData.append("file", file);
 
     // Fetch request to FastAPI
-    fetch("http://127.0.0.1:8000/predict", {
+    
+    fetch("https://deepfake-detection-1-h5e6.onrender.com", {
         method: "POST",
         body: formData
     })
