@@ -68,7 +68,7 @@ function classifyImage(event) {
 
     // Fetch request to FastAPI
     
-    fetch("https://deepfake-detection-1-h5e6.onrender.com", {
+    fetch("https://deepfake-detection-1-h5e6.onrender.com/predict", {
         method: "POST",
         body: formData
     })
