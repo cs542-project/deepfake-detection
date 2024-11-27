@@ -6,9 +6,19 @@ from fastapi.templating import Jinja2Templates
 import os
 import numpy as np
 from inference_onnx import DeepfakeONNXPredictor
+import logging
+from prometheus_fastapi_instrumentator import Instrumentator
+from fastapi.responses import JSONResponse
+
+
+logging.basicConfig(level=logging.INFO)  # Set log level to INFO
+logger = logging.getLogger(__name__)
 
 # Initialize FastAPI app
 app = FastAPI(title="Deepfake Detection API")
+# Instrument the app for Prometheus
+Instrumentator().instrument(app).expose(app, include_in_schema=False)
+
 
 # Serve static files (CSS, JavaScript) and templates (HTML)
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -51,6 +61,7 @@ async def home_page():
     """
     Serve the homepage with the Deepfake Detection interface.
     """
+    logger.info("Home page accessed")
     return templates.TemplateResponse("index.html", {"request": {}})
 
 
@@ -75,12 +86,15 @@ async def get_prediction(file: UploadFile = File(...)):
         with open(file_path, "wb") as buffer:
             buffer.write(await file.read())
     except Exception as e:
+        logger.error(f"Error during prediction: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to save uploaded file: {str(e)}")
     
     # Run prediction
     try:
+        logger.info("Prediction request received")
         result = predictor.predict(file_path)
     except Exception as e:
+        logger.error(f"Error during prediction: {e}")
         raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
     finally:
         # Clean up the temporary file
@@ -101,3 +115,7 @@ async def get_prediction(file: UploadFile = File(...)):
         "label": highest_confidence_prediction['label'],
         "confidence": highest_confidence_prediction['score'] * 100  # Convert to percentage
     }
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
