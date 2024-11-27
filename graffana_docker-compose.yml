@@ -1,0 +1,17 @@
+version: '3'
+services:
+  grafana:
+    build: .
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=your_password
+    ports:
+      - "3000:3000"  # Grafana UI on port 3000
+    depends_on:
+      - prometheus  # Only if you also have Prometheus running locally
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    driver: bridge
