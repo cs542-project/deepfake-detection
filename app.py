@@ -83,6 +83,7 @@ async def get_prediction(file: UploadFile = File(...)):
     # Save the uploaded file temporarily
     file_path = os.path.join(temp_dir, file.filename)
     try:
+        logger.info("file recieved- prediction to start")
         with open(file_path, "wb") as buffer:
             buffer.write(await file.read())
     except Exception as e:
