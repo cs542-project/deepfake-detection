@@ -7,7 +7,7 @@ import os
 import numpy as np
 from inference_onnx import DeepfakeONNXPredictor
 import logging
-# from prometheus_fastapi_instrumentator import Instrumentator
+from prometheus_fastapi_instrumentator import Instrumentator
 from fastapi.responses import JSONResponse
 
 
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 # Initialize FastAPI app
 app = FastAPI(title="Deepfake Detection API")
 # Instrument the app for Prometheus
-# Instrumentator().instrument(app).expose(app, include_in_schema=False)
+Instrumentator().instrument(app).expose(app, include_in_schema=False)
 
 
 # Serve static files (CSS, JavaScript) and templates (HTML)
