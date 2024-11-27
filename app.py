@@ -84,23 +84,23 @@ async def get_prediction(file: UploadFile = File(...)):
     file_path = os.path.join(temp_dir, file.filename)
     try:
         logger.info("file recieved- prediction to start")
-        logger.handlers[0].flush()
+        
         with open(file_path, "wb") as buffer:
             buffer.write(await file.read())
     except Exception as e:
         logger.error(f"Error during prediction: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to save uploaded file: {str(e)}")
-        logger.handlers[0].flush()
+        
     
     # Run prediction
     try:
         logger.info("Prediction request received")
-        logger.handlers[0].flush()
+        
         result = predictor.predict(file_path)
     except Exception as e:
         logger.error(f"Error during prediction: {e}")
         raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
-        logger.handlers[0].flush()
+        
     finally:
         # Clean up the temporary file
         if os.path.exists(file_path):
