@@ -1,5 +1,5 @@
 global:
-  scrape_interval: 180s
+  scrape_interval: 300s
 
 scrape_configs:
   - job_name: 'deepfake_api'
