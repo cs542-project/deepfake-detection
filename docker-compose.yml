@@ -21,3 +21,22 @@ services:
         - '9090:9090'
       volumes:
         - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      networks:
+      - monitoring
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=your_password # Change the default password here
+    ports:
+      - "3000:3000" # Grafana web UI
+    depends_on:
+      - prometheus # Make sure Prometheus starts before Grafana
+    networks:
+      - monitoring
+    links:
+      - prometheus # Connect Grafana to Prometheus
+
+networks:
+  monitoring:
+    driver: bridge
